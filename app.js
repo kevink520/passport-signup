@@ -45,14 +45,30 @@ app.get('/', (req, res) => {
   req.session.passport ? res.render('index') : res.render('signup');
 });
 
+app.get('/logout', (req, res) => {
+  req.logout();
+  req.session.destroy();
+  return res.redirect('/');
+});
+
 app.use(express.urlencoded({ extended: true });
 
 app.post('/register', async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.create({ email, password });
-  req.login(user, err => {
-    return res.redirect('/');
-  });
+  try {
+    const { email, password } = req.body;
+    const user = await User.create({ email, password });
+    req.login(user, err => {
+      return res.redirect('/');
+    });
+  } catch (err) {
+    res.statusCode = 500;
+    let message = 'An error occurred';
+    if (err.name === 'SequelizeUniqueConstraintError') {
+      message = 'User already exists. Use login instead.';
+    }
+
+    res.render('error', { message });
+  }
 });
 
 app.listen(3001, () => console.log('Server ready'));

@@ -129,5 +129,5 @@ app.post('/login', async (req, res) => {
   })(req, res);;
 });
 
-app.listen(3001, () => console.log('Server ready'));
+app.listen(process.env.PORT, () => console.log(`Server ready on ${process.env.PORT}`));
 

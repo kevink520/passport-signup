@@ -55,7 +55,7 @@ passport.deserializeUser(async (email, done) => {
 
 app.use(
   session({
-    secret: 'MySuperSecretPassportSession007',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     name: 'testingpassport',
